@@ -1,0 +1,6 @@
+read video file
+greyscale it
+change to sti first (by rows and by columns - two different STIs)
+change to histogram
+find difference in histograms from one to the previous frame
+
