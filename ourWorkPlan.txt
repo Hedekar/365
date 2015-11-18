@@ -1,5 +1,6 @@
 read video file
-greyscale it
-change to histogram
+chromaticitize it
+change to histograms for each col/row
 find difference in histograms from one to the previous frame
 create STI from histogram differences
+output to jpg
