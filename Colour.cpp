@@ -68,33 +68,36 @@ float * makeHist(fColumn[HEIGHT][3]){
 }
 
 
-	// function to divide 0-1 into binNum bins goes here (we'll use upper bounds)
+	/* Old code we should delete soon if we don't end up needing the bin values
+*	int wBins = binNum(WIDTH);
+*	int hBins = binNum(HEIGHT);
+*	float wHistBins[wBins]={};
+*	float hHistBins[hBins]={};
+*	for(int i=0; i<wBins; i++){//actually, is this needed in the code?
+*		histBins[i]=i*(1/wBins);		// Upper bounds for each bin.
+*	}
+*	for(int i=0; i<hBins; i++){
+*		histBins[i]=i*(1/hBins);		// w and h are likely =, but we create one for each in case image ratio isn't square
+*	}
+	*/
+
+
 int main(){ // maybe command-line filename input?
-	int wBins = binNum(WIDTH);
-	int hBins = binNum(HEIGHT);
-	/*float wHistBins[wBins]={};
-	float hHistBins[hBins]={};
-	for(int i=0; i<wBins; i++){//actually, is this needed in the code?
-		histBins[i]=i*(1/wBins);		// Upper bounds for each bin.
-	}
-	for(int i=0; i<hBins; i++){
-		histBins[i]=i*(1/hBins);		// w and h are likely =, but we create one for each in case image ratio isn't square
-	}*/
 
-	// for (int j=1; j<FRAMENUM; j++){
-		// for (int k=0; k<FColNum; k++){
-			// create 2-d array for current histogram
-			float fColHist[hBins][hBins] = {};
-			// for each pixel in this col/row turn rgb to rg, see what bin it fits in, increment count of hist bin
+	// Open file here
 
-			for(int i=1; i<HEIGHT; i++){
-				int rgb[3]={  }//get pixel rgb here. (we'll need to wrap this for loop in a couple for loops to cycle through cols & frames)
-				int rg[2]={rConvert(rgb),gConvert(rgb)};
+	int frameCount = 0; // replace this zero with the number of frames in the image
+	// reduce the image to be WIDTH x HEIGHT
 
-				int rBin = floor(rg[0]*hBins);
-				int gBin = floor(rg[1]*hBins);
-				fColHist[rBin][gBin] = fColHist[rBin][gBin] + (1/HEIGHT); //increment the hist bin
-			}
+// this for loop nesting isn't working in my head right Essentially we only want to use two histograms at a time, not 2x32 (two full frames of 32 columns/histograms)
+// we could cycle through the first column of every frame, then repeat for the second.   THIS IS HOW I CURRENTLY HAVE IT WRITTEN  I don't know if the video loading works like that
+
+	for (int j=0; j<WIDTH; j++){ 
+		for (int k=0; k<frameCount; k++){
+			// get the pixels of this column in rgb form and put it into a 2-D array (r,g,b for each pixel)
+			// call the makeHist function to turn the rgb array into a histogram pointer
+			// call the getI function on the second iteration of k onward to compare this frame's histogram with last frame's histogram
+			// copy the current histogram into the previous frame histogram array
 		}
 	}
 }
