@@ -49,6 +49,24 @@ float getI(float histT[HEIGHT][HEIGHT], float histTT[HEIGHT][HEIGHT]){
 	}
 }
 
+// This function takes a 2-d array as an input - rgb values for each pixel in an fcolumn - and returns a pointer to a static histogram
+float * makeHist(fColumn[HEIGHT][3]){
+	int hBins = binNum(HEIGHT);
+	static float fColHist[hBins][hBins] = {};
+	int rBin;
+	int gBin;
+	int rg[2];
+	for(int i=1; i<HEIGHT; i++){
+		int rgb[3]={ fColumn[i][0], fColumn[i][1], fColumn[2] };
+		rg[0]=rConvert(rgb);
+		rg[1]=gConvert(rgb)};
+
+		rBin = floor(rg[0]*hBins);
+		gBin = floor(rg[1]*hBins);
+		fColHist[rBin][gBin] = fColHist[rBin][gBin] + (1/HEIGHT); //increment the hist bin
+	}
+}
+
 
 	// function to divide 0-1 into binNum bins goes here (we'll use upper bounds)
 int main(){ // maybe command-line filename input?
