@@ -4,7 +4,6 @@
 
 const int WIDTH = 32;
 const int HEIGHT = 32;
-const int HBINS = binNum(HEIGHT);
 
 ////code for rgb to chromaticity shift
 
@@ -38,6 +37,8 @@ float gConvert(rgb[3]){
 int binNum(int w=WIDTH){
 	return ceil(1+log2(w));
 }
+
+const int HBINS = binNum(HEIGHT);
 
 // This function returns the I value from any two histograms
 float getI(float histT[HEIGHT][HEIGHT], float histTT[HEIGHT][HEIGHT]){
@@ -99,6 +100,7 @@ int main(){ // maybe command-line filename input?
 	int ouputSTI[WIDTH][frameCount-1]= {};
 	float *histT2;
 	float *histT1;
+	int currentFColumn[HEIGHT][3]; //
 
 // this for loop nesting isn't working in my head right Essentially we only want to use two histograms at a time, not 2x32 (two full frames of 32 columns/histograms)
 // we could cycle through the first column of every frame, then repeat for the second.   THIS IS HOW I CURRENTLY HAVE IT WRITTEN  I don't know if the video loading works like that
@@ -107,7 +109,7 @@ int main(){ // maybe command-line filename input?
 			// get the pixels of this column in rgb form and put it into a 2-D array (r,g,b for each pixel)
 
 			// call the makeHist function to turn the rgb array into a histogram pointer
-			histT2 = makeHist();
+			histT2 = makeHist(currentFColumn);
 
 			// call the getI function on the second iteration of k onward to compare this frame's histogram with last frame's histogram
 			if(k>0){outputSTI[j][k-1]= getI(histT2,histT1);}
