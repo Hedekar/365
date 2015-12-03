@@ -49,6 +49,7 @@ float getI(float histT[HEIGHT][HEIGHT], float histTT[HEIGHT][HEIGHT]){
 			sum = sum+min( histT[i][j], histTT[i][j] );
 		}
 	}
+	return sum;
 }
 
  //This function takes a 2-d array as an input - rgb values for each pixel in an fcolumn - and returns a pointer to a static histogram
@@ -92,26 +93,39 @@ float getI(float histT[HEIGHT][HEIGHT], float histTT[HEIGHT][HEIGHT]){
 
 
 
-//takes r g values for two columns, returns column of STI
-vector <vector <int>> makeHist(float col[HEIGHT][2]){
-	vector <vector <int>> hist;
-	hist.resize(HBINS, vector <int>(HBINS, 0));
+//takes r g values for one columns, returns histogram for that column
+vector <vector <float>> makeHist(float col[HEIGHT][2]){
+	vector <vector <float>> hist;
+	hist.resize(HBINS, vector <float>(HBINS, 0));
 	int rBin, gBin;
 
 	for(int i = 0; i < HEIGHT; i++){	
 		rBin = floor(col[i][0] * HBINS);
 		gBin = floor(col[i][1] * HBINS);
-		hist[rBin][gBin] = hist[rBin][gBin] + 1; //increment the hist bin
+		hist[rBin][gBin] = hist[rBin][gBin] + (1/HEIGHT); //increment the hist bin
 	}
 	return hist;
+}
+
+//takes 2 column histograms and returns an integer for I
+int getIPixel(vector <vector <float>> hist1, vector <vector <float>> hist2){
+	int I = 0;
+	int sum = 0;
+	for (int i = 0; i < HEIGHT; i++){
+		for (int j = 0; j < HEIGHT; j++){
+			sum = sum + min(hist1[i][j], hist2[i][j]);
+		}
+	}
 }
 
 int main(){ // maybe command-line filename input?
 
 	const int frameCount = 10; // replace this zero with the number of frames in the image
-	int ouputSTI[WIDTH][frameCount - 1] = {};
-	float *histT2;
-	float *histT1;
+	float outputSTI[WIDTH][frameCount - 1] = {};
+	int colCount = 0;
+	vector <vector <float>> hist1, hist2;
+	hist1.resize(HBINS, vector <float>(HBINS, 0));
+	hist2.resize(HBINS, vector <float>(HBINS, 0));
 	int currentFColumn[HEIGHT][3];
 	string filename;
 	Mat origFrame, chromFrame;
@@ -171,10 +185,14 @@ int main(){ // maybe command-line filename input?
 					col2[j][0] = rg2[j][i][0];
 					col2[j][1] = rg2[j][i][1];
 				}
+				hist1 = makeHist(col1);
+				hist2 = makeHist(col2);
 
+				outputSTI[i][colCount] = getIPixel(hist1, hist2);
 			}
 		}
-		copy(begin(rg2), end(rg2), begin(rg1));
+		colCount++;
+		copy(begin(rg2), end(rg2), begin(rg1)); //copy frame in rg2 to rg1
 		firstTime = false;
 
 		//imshow("Video", chromFrame);  //used for playing video
