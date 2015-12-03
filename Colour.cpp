@@ -9,11 +9,20 @@
 #include <opencv2/imgcodecs.hpp>
 // to determine how many bins for the histogram we need to know pixel size of our frames
 
+
+/*
+Todo:
+change video to 32x32
+output STI to png or screen whatever
+write function to rotate video at begnning when triggered
+*/
+
+
 using namespace cv;
 using namespace std;
 
-const int WIDTH = 1280;
-const int HEIGHT = 720;
+const int WIDTH = 32;
+const int HEIGHT = 720; //change to 32 later
 ////code for rgb to chromaticity shift
 
 // takes rgb input in three uchars, outputs an r chromaticity uchar
@@ -108,9 +117,9 @@ vector <vector <float>> makeHist(float col[HEIGHT][2]){
 }
 
 //takes 2 column histograms and returns an integer for I
-int getIPixel(vector <vector <float>> hist1, vector <vector <float>> hist2){
-	int I = 0;
-	int sum = 0;
+float getIPixel(vector <vector <float>> hist1, vector <vector <float>> hist2){
+	float I = 0;
+	float sum = 0;
 	for (int i = 0; i < HEIGHT; i++){
 		for (int j = 0; j < HEIGHT; j++){
 			sum = sum + min(hist1[i][j], hist2[i][j]);
@@ -188,10 +197,10 @@ int main(){ // maybe command-line filename input?
 				hist1 = makeHist(col1);
 				hist2 = makeHist(col2);
 
-				outputSTI[i][colCount] = getIPixel(hist1, hist2);
+				outputSTI[i][colCount] = getIPixel(hist1, hist2); // colCount should be frameCount
 			}
 		}
-		colCount++;
+		colCount++; //frameCount
 		copy(begin(rg2), end(rg2), begin(rg1)); //copy frame in rg2 to rg1
 		firstTime = false;
 
